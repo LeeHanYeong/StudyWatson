@@ -29,6 +29,7 @@ class User(AbstractUser, TimeStampedModel, DeleteModel):
     )
     first_name = None
     last_name = None
+    img_profile = models.ImageField('프로필 이미지', upload_to='user', blank=True)
     name = models.CharField('이름', max_length=20, blank=True)
     type = models.CharField('유형', max_length=10, choices=TYPE_CHOICES, default=TYPE_EMAIL)
     email = models.EmailField('이메일', unique=True)

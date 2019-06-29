@@ -109,6 +109,13 @@ class UserRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
         super().put(request, *args, **kwargs)
 
 
+@method_decorator(
+    name='get',
+    decorator=swagger_auto_schema(
+        operation_summary='User Profile',
+        operation_description='사용자 프로필 (Token인증시 자신의 정보)'
+    )
+)
 class UserProfileAPIView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
