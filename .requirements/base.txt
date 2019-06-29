@@ -1,0 +1,25 @@
+# Django
+django
+django-admin-sortable2
+django-extensions
+django-filter
+django-json-secrets
+django-modeladmin-reorder
+django-phonenumber-field
+django-storages
+
+# DRF
+djangorestframework
+djangorestframework-camel-case
+django-cors-headers
+django-rest-auth
+drf-writable-nested
+drf-yasg
+
+# DB
+psycopg2-binary
+
+# Others
+boto3
+pillow
+phonenumberslite

@@ -1,0 +1,12 @@
+-r ./production.txt
+
+# Django
+django-debug-toolbar
+django-extensions
+
+# AWS
+awsebcli
+
+# Others
+ipython
+notebook
