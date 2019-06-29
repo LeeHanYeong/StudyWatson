@@ -25,10 +25,10 @@ DEFAULT_FILE_STORAGE = 'config.storages.MediaStorage'
 CORS_ORIGIN_ALLOW_ALL = True
 
 # Sentry
-sentry_sdk.init(
-    dsn=secrets['SENTRY_DSN'],
-    integrations=[DjangoIntegration()]
-)
+# sentry_sdk.init(
+#     dsn=secrets['SENTRY_DSN'],
+#     integrations=[DjangoIntegration()]
+# )
 
 
 def is_ec2_linux():
