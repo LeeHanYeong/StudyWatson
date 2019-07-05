@@ -6,7 +6,7 @@ from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 
 from .models import User
-from .permissions import IsUserSelf
+from .permissions import IsUserSelf, IsUserSelfOrReadOnly
 from .serializers import (
     UserSerializer,
     UserCreateSerializer,
@@ -97,7 +97,7 @@ class UserCreateAPIView(generics.CreateAPIView):
 )
 class UserRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
-    permission_classes = (IsUserSelf,)
+    permission_classes = (IsUserSelfOrReadOnly,)
 
     def get_serializer_class(self):
         if self.request.method in ('PATCH', 'PUT'):

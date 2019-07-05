@@ -12,6 +12,7 @@ django-storages
 djangorestframework
 djangorestframework-camel-case
 django-cors-headers
+django-extra-fields
 django-rest-auth
 drf-writable-nested
 drf-yasg

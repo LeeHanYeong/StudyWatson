@@ -1,3 +1,4 @@
+from drf_extra_fields.fields import Base64ImageField
 from rest_auth.serializers import TokenSerializer, LoginSerializer
 from rest_framework import serializers
 
@@ -9,7 +10,9 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'pk',
+            'img_profile',
             'username',
+            'nickname',
             'type',
             'email',
             'phone_number',
@@ -27,10 +30,12 @@ class UserSerializer(serializers.ModelSerializer):
 class UserCreateSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(help_text='비밀번호')
     password2 = serializers.CharField(help_text='비밀번호 확인')
+    img_profile = Base64ImageField(required=False)
 
     class Meta:
         model = User
         fields = (
+            'img_profile',
             'username',
             'password1',
             'password2',
@@ -59,9 +64,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
+    img_profile = Base64ImageField(required=False)
+
     class Meta:
         model = User
         fields = (
+            'img_profile',
+            'nickname',
             'email',
             'phone_number',
         )
