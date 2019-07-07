@@ -12,6 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
             'pk',
             'img_profile',
             'username',
+            'name',
             'nickname',
             'type',
             'email',
@@ -37,6 +38,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
         fields = (
             'img_profile',
             'username',
+            'name',
+            'nickname',
             'password1',
             'password2',
             'type',
@@ -70,6 +73,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'img_profile',
+            'name',
             'nickname',
             'email',
             'phone_number',

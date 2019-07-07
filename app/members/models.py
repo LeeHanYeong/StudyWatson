@@ -33,9 +33,12 @@ class User(AbstractUser, TimeStampedModel, DeleteModel):
     name = models.CharField('이름', max_length=20, blank=True)
     nickname = models.CharField('닉네임', max_length=20, blank=True, null=True)
     type = models.CharField('유형', max_length=10, choices=TYPE_CHOICES, default=TYPE_EMAIL)
-    email = models.EmailField('이메일', unique=True)
+    email = models.EmailField('이메일', unique=True, null=True)
     phone_number = PhoneNumberField('전화번호', blank=True)
 
+    # Deleted
+    deleted_email = models.EmailField('삭제된 유저의 이메일', blank=True)
+    deleted_username = models.CharField('삭제된 유저의 username', max_length=150, blank=True)
     REQUIRED_FIELDS = ('email',)
 
     objects = UserManager()
@@ -48,14 +51,21 @@ class User(AbstractUser, TimeStampedModel, DeleteModel):
         verbose_name_plural = f'{verbose_name} 목록'
 
     def save(self, *args, **kwargs):
-        if self.type == self.TYPE_EMAIL:
+        if self.type == self.TYPE_EMAIL and not self.is_deleted:
             self.username = self.email
         super().save(*args, **kwargs)
 
     def perform_delete(self):
-        deleted_count = User.objects.filter(is_deleted=True).count()
-        deleted_name = f'deleted_{deleted_count:05d}'
+        self.deleted_username = self.username
+        self.deleted_email = self.email
+        last_deleted_user = User._base_manager.filter(is_deleted=True).order_by('username').last()
+        if last_deleted_user:
+            number = int(last_deleted_user.username.rsplit('_', 1)[-1])
+        else:
+            number = 0
+        deleted_name = f'deleted_{number:05d}'
         self.username = deleted_name
+        self.email = None
 
 
 class EmailValidation(TimeStampedModel):
