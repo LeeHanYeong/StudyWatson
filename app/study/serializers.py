@@ -9,6 +9,29 @@ from .models import (
     Schedule,
 )
 
+STUDY_FIELDS = (
+    'pk',
+    'category',
+    'author',
+    'name',
+    'description',
+)
+STUDY_MEMBER_FIELDS = (
+    'pk',
+    'user',
+    'role',
+    'role_display',
+)
+ATTENDANCE_FIELDS = (
+    'pk',
+    'user',
+    'schedule',
+    'vote',
+    'vote_display',
+    'att',
+    'att_display',
+)
+
 
 class StudyCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,13 +48,7 @@ class StudyMemberSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StudyMember
-        fields = (
-            'pk',
-            'user',
-            'study',
-            'role',
-            'role_display',
-        )
+        fields = STUDY_MEMBER_FIELDS
 
 
 class StudyMemberCreateSerializer(serializers.ModelSerializer):
@@ -44,7 +61,7 @@ class StudyMemberCreateSerializer(serializers.ModelSerializer):
         )
 
     def to_representation(self, instance):
-        return StudyMemberSerializer(instance).data
+        return StudyMemberDetailSerializer(instance).data
 
 
 class StudyMemberUpdateSerializer(serializers.ModelSerializer):
@@ -102,18 +119,29 @@ class ScheduleUpdateSerializer(serializers.ModelSerializer):
 class StudySerializer(serializers.ModelSerializer):
     category = StudyCategorySerializer()
     author = UserSerializer()
+
+    class Meta:
+        model = Study
+        fields = STUDY_FIELDS
+
+
+class StudyMemberDetailSerializer(StudyMemberSerializer):
+    study = StudySerializer()
+
+    class Meta:
+        model = StudyMember
+        fields = STUDY_MEMBER_FIELDS + (
+            'study',
+        )
+
+
+class StudyDetailSerializer(StudySerializer):
     study_member_set = StudyMemberSerializer(many=True)
     schedule_set = ScheduleSerializer(many=True)
 
     class Meta:
         model = Study
-        fields = (
-            'pk',
-            'category',
-            'author',
-            'name',
-            'description',
-
+        fields = STUDY_FIELDS + (
             'study_member_set',
             'schedule_set',
         )
@@ -154,14 +182,18 @@ class AttendanceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Attendance
-        fields = (
-            'pk',
-            'user',
+        fields = ATTENDANCE_FIELDS
+
+
+class AttendanceDetailSerializer(AttendanceSerializer):
+    study = StudySerializer(source='schedule__study')
+    schedule = ScheduleSerializer()
+
+    class Meta:
+        model = Attendance
+        fields = ATTENDANCE_FIELDS + (
+            'study',
             'schedule',
-            'vote',
-            'vote_display',
-            'att',
-            'att_display',
         )
 
 

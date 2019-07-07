@@ -24,6 +24,9 @@ from .serializers import (
     AttendanceSerializer,
     AttendanceCreateSerializer,
     AttendanceUpdateSerializer,
+    StudyDetailSerializer, StudyMemberDetailSerializer, AttendanceDetailSerializer)
+from .filters import (
+    StudyMemberListFilter,
 )
 
 
@@ -111,18 +114,23 @@ class StudyRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     def get_serializer_class(self):
         if self.request.method == 'PATCH':
             return StudyUpdateSerializer
-        return StudySerializer
+        return StudyDetailSerializer
 
     @swagger_auto_schema(auto_schema=None)
     def put(self, request, *args, **kwargs):
         super().put(request, *args, **kwargs)
 
 
+STUDY_MEMBER_LIST_DESCRIPTION = '''
+스터디멤버 목록
+'''
+
+
 @method_decorator(
     name='get',
     decorator=swagger_auto_schema(
         operation_summary='StudyMember List',
-        operation_description='스터디멤버 목록'
+        operation_description=STUDY_MEMBER_LIST_DESCRIPTION,
     )
 )
 @method_decorator(
@@ -131,11 +139,13 @@ class StudyRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
         operation_summary='StudyMember Create',
         operation_description='스터디멤버 생성',
         responses={
-            status.HTTP_200_OK: StudyMemberSerializer(),
+            status.HTTP_200_OK: StudyMemberDetailSerializer(),
         }
     )
 )
 class StudyMemberListCreateAPIView(generics.ListCreateAPIView):
+    filterset_class = StudyMemberListFilter
+
     def get_queryset(self):
         study = get_object_or_404(Study, pk=self.kwargs.get('study_pk'))
         return StudyMember.objects.filter(study=study)
@@ -178,7 +188,7 @@ class StudyMemberRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIV
     def get_serializer_class(self):
         if self.request.method == 'PATCH':
             return StudyMemberUpdateSerializer
-        return StudySerializer
+        return StudyMemberDetailSerializer
 
     @swagger_auto_schema(auto_schema=None)
     def put(self, request, *args, **kwargs):
@@ -312,7 +322,7 @@ class AttendanceRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIVi
     def get_serializer_class(self):
         if self.request.method == 'PATCH':
             return AttendanceUpdateSerializer
-        return AttendanceSerializer
+        return AttendanceDetailSerializer
 
     @swagger_auto_schema(auto_schema=None)
     def put(self, request, *args, **kwargs):
