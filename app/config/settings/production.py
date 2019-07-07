@@ -8,11 +8,12 @@ from .base import *
 
 secrets = import_secrets()
 
-DEBUG = False or (
-        len(sys.argv) > 1
-        and sys.argv[1] == 'runserver'
-        and platform.system() != 'Linux'
-) or os.environ.get('DEBUG') == 'True'
+# DEBUG = False or (
+#         len(sys.argv) > 1
+#         and sys.argv[1] == 'runserver'
+#         and platform.system() != 'Linux'
+# ) or os.environ.get('DEBUG') == 'True'
+DEBUG = True
 
 # WSGI
 WSGI_APPLICATION = 'config.wsgi.production.application'

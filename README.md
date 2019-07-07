@@ -4,8 +4,7 @@
 
 - 190707
   - nickname에서 unique조건 없앰
-  - 
-- 
+  - StudyMember List에서 `user`또는 `study`로 filter기능 추가
 
 ## API 설명
 
