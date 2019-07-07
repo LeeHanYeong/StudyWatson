@@ -19,6 +19,7 @@ STUDY_FIELDS = (
 STUDY_MEMBER_FIELDS = (
     'pk',
     'user',
+    'study',
     'role',
     'role_display',
 )
@@ -40,15 +41,6 @@ class StudyCategorySerializer(serializers.ModelSerializer):
             'pk',
             'name',
         )
-
-
-class StudyMemberSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
-    role_display = serializers.CharField(source='get_role_display')
-
-    class Meta:
-        model = StudyMember
-        fields = STUDY_MEMBER_FIELDS
 
 
 class StudyMemberCreateSerializer(serializers.ModelSerializer):
@@ -125,14 +117,20 @@ class StudySerializer(serializers.ModelSerializer):
         fields = STUDY_FIELDS
 
 
-class StudyMemberDetailSerializer(StudyMemberSerializer):
+class StudyMemberSerializer(serializers.ModelSerializer):
     study = StudySerializer()
+    user = UserSerializer()
+    role_display = serializers.CharField(source='get_role_display')
 
     class Meta:
         model = StudyMember
-        fields = STUDY_MEMBER_FIELDS + (
-            'study',
-        )
+        fields = STUDY_MEMBER_FIELDS
+
+
+class StudyMemberDetailSerializer(StudyMemberSerializer):
+    class Meta:
+        model = StudyMember
+        fields = STUDY_MEMBER_FIELDS
 
 
 class StudyDetailSerializer(StudySerializer):
