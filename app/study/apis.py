@@ -144,11 +144,8 @@ STUDY_MEMBER_LIST_DESCRIPTION = '''
     )
 )
 class StudyMemberListCreateAPIView(generics.ListCreateAPIView):
+    queryset = StudyMember.objects.all()
     filterset_class = StudyMemberListFilter
-
-    def get_queryset(self):
-        study = get_object_or_404(Study, pk=self.kwargs.get('study_pk'))
-        return StudyMember.objects.filter(study=study)
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -181,9 +178,7 @@ class StudyMemberListCreateAPIView(generics.ListCreateAPIView):
     ),
 )
 class StudyMemberRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-    def get_queryset(self):
-        study = get_object_or_404(Study, pk=self.kwargs.get('study_pk'))
-        return StudyMember.objects.filter(study=study)
+    queryset = StudyMember.objects.all()
 
     def get_serializer_class(self):
         if self.request.method == 'PATCH':
