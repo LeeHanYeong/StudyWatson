@@ -1,5 +1,9 @@
+from datetime import timedelta
+
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.utils import timezone
+from django.utils.crypto import get_random_string
 from django_extensions.db.models import TimeStampedModel
 
 User = get_user_model()
@@ -110,3 +114,40 @@ class Attendance(TimeStampedModel):
         return f'{self.schedule.__str__()} | {self.user.name} ' \
             f'(사전: {self.get_vote_display()}, 실제: {self.get_att_display()}) ' \
             f'(pk: {self.pk})'
+
+
+class StudyInviteLink(TimeStampedModel):
+    study = models.ForeignKey(Study, verbose_name='스터디', on_delete=models.CASCADE)
+    code = models.CharField('초대코드', max_length=30, blank=True)
+    duration = models.PositiveSmallIntegerField('유효시간', default=24)
+
+    class Meta:
+        verbose_name = '스터디 초대 링크'
+        verbose_name_plural = f'{verbose_name} 목록'
+        ordering = ('-created',)
+        indexes = [
+            models.Index(fields=['created']),
+            models.Index(fields=['modified']),
+        ]
+
+    def __str__(self):
+        return f'{self.study.name}'
+
+    def save(self, **kwargs):
+        if not self.code:
+            self.reset_code(commit=False)
+        super().save(**kwargs)
+
+    def is_valid(self):
+        now = timezone.now()
+        return now - self.created < timedelta(hours=self.duration)
+
+    def reset_code(self, commit=True):
+        while True:
+            code = get_random_string(30)
+            if not StudyInviteLink.objects.filter(code=code).exists():
+                break
+
+        self.code = code
+        if commit:
+            self.save()
