@@ -44,7 +44,7 @@ class User(AbstractUser, TimeStampedModel, DeleteModel):
     objects = UserManager()
 
     def __str__(self):
-        return self.name
+        return f'{self.name} ({self.email}) (pk: {self.pk})'
 
     class Meta:
         verbose_name = '사용자'

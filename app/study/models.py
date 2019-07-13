@@ -22,7 +22,7 @@ class Study(TimeStampedModel):
         related_name='study_set', on_delete=models.CASCADE,
     )
     author = models.ForeignKey(
-        User, verbose_name='작성자', on_delete=models.CASCADE,
+        User, verbose_name='생성자', on_delete=models.CASCADE,
         related_name='study_set', blank=True, null=True,
     )
     name = models.CharField('스터디명', max_length=20)
@@ -33,7 +33,7 @@ class Study(TimeStampedModel):
         verbose_name_plural = f'{verbose_name} 목록'
 
     def __str__(self):
-        return f'{self.category.name} | {self.name}'
+        return f'{self.category.name} | {self.name} (pk: {self.pk})'
 
 
 class Schedule(TimeStampedModel):
@@ -51,7 +51,7 @@ class Schedule(TimeStampedModel):
         verbose_name_plural = f'{verbose_name} 목록'
 
     def __str__(self):
-        return f'{self.study.category.name} | {self.study.name} | {self.date}'
+        return f'{self.study.category.name} | {self.study.name} | {self.date} (pk: {self.pk})'
 
 
 class StudyMember(TimeStampedModel):
@@ -77,7 +77,7 @@ class StudyMember(TimeStampedModel):
         verbose_name_plural = f'{verbose_name} 목록'
 
     def __str__(self):
-        return f'{self.study.name} | {self.user.name} ({self.get_role_display()}'
+        return f'{self.study.name} | {self.user.name} ({self.get_role_display()} (pk: {self.pk})'
 
     def withdraw(self):
         self.is_withdraw = True
@@ -107,4 +107,6 @@ class Attendance(TimeStampedModel):
         verbose_name_plural = f'{verbose_name} 목록'
 
     def __str__(self):
-        return f'{self.schedule.__str__()} | {self.user.name} (사전: {self.get_vote_display()}, 실제: {self.get_att_display()()}'
+        return f'{self.schedule.__str__()} | {self.user.name} ' \
+            f'(사전: {self.get_vote_display()}, 실제: {self.get_att_display()}) ' \
+            f'(pk: {self.pk})'

@@ -6,7 +6,7 @@ from .models import User
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display = ('username', 'email', 'type')
+    list_display = ('username', 'name', 'email', 'type', 'pk')
     list_filter = ('is_staff', 'groups')
     fieldsets = (
         (None, {
