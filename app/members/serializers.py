@@ -1,6 +1,7 @@
 from drf_extra_fields.fields import Base64ImageField
-from rest_auth.serializers import TokenSerializer, LoginSerializer
+from rest_auth.serializers import TokenSerializer
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 
 from .models import User
 
@@ -63,7 +64,12 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return self.Meta.model._default_manager.create_user(**validated_data)
 
     def to_representation(self, instance):
-        return UserSerializer(instance).data
+        token = Token.objects.get_or_create(user=instance)[0]
+        data = {
+            'user': UserSerializer(instance).data,
+            'token': token.key,
+        }
+        return data
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
