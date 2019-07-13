@@ -3,6 +3,10 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, status, permissions
 from rest_framework.generics import get_object_or_404
 
+from .filters import (
+    ScheduleFilter,
+    StudyMemberListFilter,
+)
 from .models import (
     StudyCategory,
     Study,
@@ -24,9 +28,9 @@ from .serializers import (
     AttendanceSerializer,
     AttendanceCreateSerializer,
     AttendanceUpdateSerializer,
-    StudyDetailSerializer, StudyMemberDetailSerializer, AttendanceDetailSerializer)
-from .filters import (
-    StudyMemberListFilter,
+    StudyDetailSerializer,
+    StudyMemberDetailSerializer,
+    AttendanceDetailSerializer,
 )
 
 
@@ -208,9 +212,8 @@ class StudyMemberRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIV
     )
 )
 class ScheduleListCreateAPIView(generics.ListCreateAPIView):
-    def get_queryset(self):
-        study = get_object_or_404(Study, pk=self.kwargs.get('study_pk'))
-        return Schedule.objects.filter(study=study)
+    queryset = Schedule.objects.all()
+    filterset_class = ScheduleFilter
 
     def get_serializer_class(self):
         if self.request.method == 'POST':

@@ -1,5 +1,13 @@
 from django_filters import rest_framework as filters
-from .models import StudyMember
+from .models import Schedule, StudyMember
+
+
+class ScheduleFilter(filters.FilterSet):
+    class Meta:
+        model = Schedule
+        fields = (
+            'study',
+        )
 
 
 class StudyMemberListFilter(filters.FilterSet):
