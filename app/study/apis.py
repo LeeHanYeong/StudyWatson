@@ -1,12 +1,11 @@
 from django.utils.decorators import method_decorator
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, status, permissions
-from rest_framework.generics import get_object_or_404
 
 from .filters import (
     ScheduleFilter,
     StudyMemberListFilter,
-)
+    AttendanceFilter)
 from .models import (
     StudyCategory,
     Study,
@@ -246,9 +245,7 @@ class ScheduleListCreateAPIView(generics.ListCreateAPIView):
     ),
 )
 class ScheduleRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-    def get_queryset(self):
-        study = get_object_or_404(Study, pk=self.kwargs.get('study_pk'))
-        return Schedule.objects.filter(study=study)
+    queryset = Schedule.objects.all()
 
     def get_serializer_class(self):
         if self.request.method == 'PATCH':
@@ -278,9 +275,8 @@ class ScheduleRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView
     )
 )
 class AttendanceListCreateAPIView(generics.ListCreateAPIView):
-    def get_queryset(self):
-        study = get_object_or_404(Study, pk=self.kwargs.get('study_pk'))
-        return Attendance.objects.filter(study=study)
+    queryset = Attendance.objects.all()
+    filterset_class = AttendanceFilter
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -313,9 +309,7 @@ class AttendanceListCreateAPIView(generics.ListCreateAPIView):
     ),
 )
 class AttendanceRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-    def get_queryset(self):
-        study = get_object_or_404(Study, pk=self.kwargs.get('study_pk'))
-        return Attendance.objects.filter(study=study)
+    queryset = Schedule.objects.all()
 
     def get_serializer_class(self):
         if self.request.method == 'PATCH':
