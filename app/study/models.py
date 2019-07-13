@@ -61,6 +61,7 @@ class StudyMember(TimeStampedModel):
         (ROLE_SUB_MANAGER, '부 관리자'),
         (ROLE_MAIN_MANAGER, '관리자'),
     )
+    is_withdraw = models.BooleanField('탈퇴여부', default=False)
     user = models.ForeignKey(
         User, verbose_name='유저', on_delete=models.CASCADE,
         related_name='study_member_set',
@@ -77,6 +78,10 @@ class StudyMember(TimeStampedModel):
 
     def __str__(self):
         return f'{self.study.name} | {self.user.name} ({self.get_role_display()}'
+
+    def withdraw(self):
+        self.is_withdraw = True
+        self.save()
 
 
 class Attendance(TimeStampedModel):

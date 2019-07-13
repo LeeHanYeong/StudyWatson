@@ -18,6 +18,7 @@ STUDY_FIELDS = (
 )
 STUDY_MEMBER_FIELDS = (
     'pk',
+    'is_withdraw',
     'user',
     'study',
     'role',

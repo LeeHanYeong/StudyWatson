@@ -79,7 +79,15 @@ class StudyListCreateAPIView(generics.ListCreateAPIView):
     )
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        study = serializer.save(author=self.request.user)
+        # Study생성시 해당 유저가 관리자인 StudyMember생성
+        StudyMember.objects.update_or_create(
+            user=self.request.user,
+            study=study,
+            defaults={
+                'role': StudyMember.ROLE_MAIN_MANAGER,
+            }
+        )
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -176,8 +184,8 @@ class StudyMemberListCreateAPIView(generics.ListCreateAPIView):
 @method_decorator(
     name='delete',
     decorator=swagger_auto_schema(
-        operation_summary='StudyMember Delete',
-        operation_description='스터디멤버 삭제',
+        operation_summary='StudyMember Withdraw',
+        operation_description='스터디멤버 탈퇴',
     ),
 )
 class StudyMemberRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -191,6 +199,9 @@ class StudyMemberRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIV
     @swagger_auto_schema(auto_schema=None)
     def put(self, request, *args, **kwargs):
         super().put(request, *args, **kwargs)
+
+    def perform_destroy(self, instance):
+        instance.withdraw()
 
 
 @method_decorator(

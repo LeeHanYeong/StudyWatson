@@ -12,12 +12,14 @@ class ScheduleFilter(filters.FilterSet):
 
 
 class StudyMemberListFilter(filters.FilterSet):
+    # is_withdraw = filters.BooleanFilter()
     user = filters.NumberFilter(help_text='User의 pk(id)')
     study = filters.NumberFilter(help_text='Study의 pk(id)')
 
     class Meta:
         model = StudyMember
         fields = (
+            'is_withdraw',
             'user',
             'study',
         )
