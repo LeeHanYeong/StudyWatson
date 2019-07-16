@@ -46,6 +46,7 @@ class Schedule(TimeStampedModel):
         related_name='schedule_set',
     )
     location = models.CharField('장소', max_length=50, blank=True)
+    subject = models.CharField('주제', max_length=50, blank=True)
     description = models.CharField('설명', max_length=300, blank=True)
     date = models.DateField('일정 당일')
     due_date = models.DateField('마감일', blank=True, null=True)
@@ -103,7 +104,7 @@ class Attendance(TimeStampedModel):
         Schedule, verbose_name='스터디 일정', on_delete=models.CASCADE,
         related_name='attendance_set',
     )
-    vote = models.CharField('사전 참석 투표', choices=CHOICES_VOTE, max_length=10)
+    vote = models.CharField('사전 참석 투표', choices=CHOICES_VOTE, max_length=10, blank=True)
     att = models.CharField('실제 참석 결과', choices=CHOICES_VOTE, max_length=10, blank=True)
 
     class Meta:
