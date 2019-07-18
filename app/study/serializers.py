@@ -4,7 +4,7 @@ from members.serializers import UserSerializer
 from .models import (
     StudyCategory,
     Study,
-    StudyMember,
+    StudyMembership,
     Attendance,
     Schedule,
 )
@@ -46,7 +46,7 @@ class StudyCategorySerializer(serializers.ModelSerializer):
 
 class StudyMemberCreateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = StudyMember
+        model = StudyMembership
         fields = (
             'user',
             'study',
@@ -59,7 +59,7 @@ class StudyMemberCreateSerializer(serializers.ModelSerializer):
 
 class StudyMemberUpdateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = StudyMember
+        model = StudyMembership
         fields = (
             'role',
         )
@@ -124,24 +124,24 @@ class StudyMemberSerializer(serializers.ModelSerializer):
     role_display = serializers.CharField(source='get_role_display')
 
     class Meta:
-        model = StudyMember
+        model = StudyMembership
         fields = STUDY_MEMBER_FIELDS
 
 
 class StudyMemberDetailSerializer(StudyMemberSerializer):
     class Meta:
-        model = StudyMember
+        model = StudyMembership
         fields = STUDY_MEMBER_FIELDS
 
 
 class StudyDetailSerializer(StudySerializer):
-    study_member_set = StudyMemberSerializer(many=True)
+    membership_set = StudyMemberSerializer(many=True)
     schedule_set = ScheduleSerializer(many=True)
 
     class Meta:
         model = Study
         fields = STUDY_FIELDS + (
-            'study_member_set',
+            'membership_set',
             'schedule_set',
         )
 

@@ -1,6 +1,6 @@
 from django_filters import rest_framework as filters
 
-from .models import Schedule, StudyMember, Attendance
+from .models import Schedule, StudyMembership, Attendance
 
 
 class ScheduleFilter(filters.FilterSet):
@@ -11,12 +11,12 @@ class ScheduleFilter(filters.FilterSet):
         )
 
 
-class StudyMemberListFilter(filters.FilterSet):
+class StudyMembershipListFilter(filters.FilterSet):
     user = filters.NumberFilter(help_text='User의 pk(id)')
     study = filters.NumberFilter(help_text='Study의 pk(id)')
 
     class Meta:
-        model = StudyMember
+        model = StudyMembership
         fields = (
             'is_withdraw',
             'user',
