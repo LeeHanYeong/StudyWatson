@@ -4,12 +4,12 @@ from rest_framework import generics, status, permissions
 
 from .filters import (
     ScheduleFilter,
-    StudyMemberListFilter,
+    StudyMembershipListFilter,
     AttendanceFilter)
 from .models import (
     StudyCategory,
     Study,
-    StudyMember,
+    StudyMembership,
     Schedule,
     Attendance,
 )
@@ -81,11 +81,11 @@ class StudyListCreateAPIView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         study = serializer.save(author=self.request.user)
         # Study생성시 해당 유저가 관리자인 StudyMember생성
-        StudyMember.objects.update_or_create(
+        StudyMembership.objects.update_or_create(
             user=self.request.user,
             study=study,
             defaults={
-                'role': StudyMember.ROLE_MAIN_MANAGER,
+                'role': StudyMembership.ROLE_MAIN_MANAGER,
             }
         )
 
@@ -133,30 +133,30 @@ class StudyRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 
 STUDY_MEMBER_LIST_DESCRIPTION = '''
-스터디멤버 목록
+스터디멤버십 목록
 '''
 
 
 @method_decorator(
     name='get',
     decorator=swagger_auto_schema(
-        operation_summary='StudyMember List',
+        operation_summary='StudyMembership List',
         operation_description=STUDY_MEMBER_LIST_DESCRIPTION,
     )
 )
 @method_decorator(
     name='post',
     decorator=swagger_auto_schema(
-        operation_summary='StudyMember Create',
-        operation_description='스터디멤버 생성',
+        operation_summary='StudyMembership Create',
+        operation_description='스터디멤버십 생성',
         responses={
             status.HTTP_200_OK: StudyMemberDetailSerializer(),
         }
     )
 )
 class StudyMemberListCreateAPIView(generics.ListCreateAPIView):
-    queryset = StudyMember.objects.all()
-    filterset_class = StudyMemberListFilter
+    queryset = StudyMembership.objects.all()
+    filterset_class = StudyMembershipListFilter
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -167,15 +167,15 @@ class StudyMemberListCreateAPIView(generics.ListCreateAPIView):
 @method_decorator(
     name='get',
     decorator=swagger_auto_schema(
-        operation_summary='StudyMember Retrieve',
-        operation_description='스터디멤버 정보'
+        operation_summary='StudyMembership Retrieve',
+        operation_description='스터디멤버십 정보'
     )
 )
 @method_decorator(
     name='patch',
     decorator=swagger_auto_schema(
-        operation_summary='StudyMember Update',
-        operation_description='스터디멤버 정보 수정',
+        operation_summary='StudyMembership Update',
+        operation_description='스터디멤버십 정보 수정',
         responses={
             status.HTTP_200_OK: StudyMemberSerializer(),
         },
@@ -184,12 +184,12 @@ class StudyMemberListCreateAPIView(generics.ListCreateAPIView):
 @method_decorator(
     name='delete',
     decorator=swagger_auto_schema(
-        operation_summary='StudyMember Withdraw',
-        operation_description='스터디멤버 탈퇴',
+        operation_summary='StudyMembership Withdraw',
+        operation_description='스터디멤버십 탈퇴',
     ),
 )
 class StudyMemberRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = StudyMember.objects.all()
+    queryset = StudyMembership.objects.all()
 
     def get_serializer_class(self):
         if self.request.method == 'PATCH':

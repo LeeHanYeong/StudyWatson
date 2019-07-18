@@ -3,7 +3,7 @@ from django.contrib import admin
 from .models import (
     StudyCategory,
     Study,
-    StudyMember,
+    StudyMembership,
     Schedule,
     Attendance,
 )
@@ -28,8 +28,8 @@ class StudyAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(StudyMember)
-class StudyMemberAdmin(admin.ModelAdmin):
+@admin.register(StudyMembership)
+class StudyMembershipAdmin(admin.ModelAdmin):
     list_display = ('user', 'study', 'role', 'pk')
     list_filter = ('study',)
     search_fields = ('user', 'study')

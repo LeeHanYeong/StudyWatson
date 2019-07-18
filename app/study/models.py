@@ -27,14 +27,19 @@ class Study(TimeStampedModel):
     )
     author = models.ForeignKey(
         User, verbose_name='생성자', on_delete=models.CASCADE,
-        related_name='study_set', blank=True, null=True,
+        related_name='created_study_set', blank=True, null=True,
     )
     name = models.CharField('스터디명', max_length=20)
     description = models.CharField('설명', max_length=100, blank=True)
+    member_set = models.ManyToManyField(
+        User, verbose_name='스터디원 목록', blank=True,
+        through='StudyMembership', related_name='joined_study_set',
+    )
 
     class Meta:
         verbose_name = '스터디'
         verbose_name_plural = f'{verbose_name} 목록'
+        ordering = ('-pk',)
 
     def __str__(self):
         return f'{self.category.name} | {self.name} (pk: {self.pk})'
@@ -54,12 +59,17 @@ class Schedule(TimeStampedModel):
     class Meta:
         verbose_name = '스터디 일정'
         verbose_name_plural = f'{verbose_name} 목록'
+        ordering = ('-pk',)
 
     def __str__(self):
         return f'{self.study.category.name} | {self.study.name} | {self.date} (pk: {self.pk})'
 
+    def save(self, **kwargs):
+        super().save(**kwargs)
+        self.study.membership_set.filter()
 
-class StudyMember(TimeStampedModel):
+
+class StudyMembership(TimeStampedModel):
     ROLE_NORMAL, ROLE_SUB_MANAGER, ROLE_MAIN_MANAGER = 'normal', 'sub_manager', 'manager'
     CHOICES_ROLE = (
         (ROLE_NORMAL, '일반멤버'),
@@ -69,17 +79,18 @@ class StudyMember(TimeStampedModel):
     is_withdraw = models.BooleanField('탈퇴여부', default=False)
     user = models.ForeignKey(
         User, verbose_name='유저', on_delete=models.CASCADE,
-        related_name='study_member_set',
+        related_name='membership_set',
     )
     study = models.ForeignKey(
         Study, verbose_name='스터디', on_delete=models.CASCADE,
-        related_name='study_member_set',
+        related_name='membership_set',
     )
     role = models.CharField('역할', choices=CHOICES_ROLE, default=ROLE_NORMAL, max_length=12)
 
     class Meta:
-        verbose_name = '스터디 멤버'
+        verbose_name = '스터디 멤버십'
         verbose_name_plural = f'{verbose_name} 목록'
+        ordering = ('-pk',)
 
     def __str__(self):
         return f'{self.study.name} | {self.user.name} ({self.get_role_display()} (pk: {self.pk})'
@@ -110,6 +121,7 @@ class Attendance(TimeStampedModel):
     class Meta:
         verbose_name = '스터디 일정 참가'
         verbose_name_plural = f'{verbose_name} 목록'
+        ordering = ('-pk',)
 
     def __str__(self):
         return f'{self.schedule.__str__()} | {self.user.name} ' \
