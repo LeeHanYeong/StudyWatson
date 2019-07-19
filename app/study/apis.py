@@ -323,7 +323,7 @@ class AttendanceListCreateAPIView(generics.ListCreateAPIView):
     ),
 )
 class AttendanceRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Schedule.objects.all()
+    queryset = Attendance.objects.all()
 
     def get_serializer_class(self):
         if self.request.method == 'PATCH':

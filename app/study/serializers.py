@@ -24,6 +24,15 @@ STUDY_MEMBER_FIELDS = (
     'role',
     'role_display',
 )
+SCHEDULE_FIELDS = (
+    'pk',
+    'location',
+    'subject',
+    'description',
+    'vote_end_at',
+    'start_at',
+    'studying_time',
+)
 ATTENDANCE_FIELDS = (
     'pk',
     'user',
@@ -71,39 +80,27 @@ class StudyMemberUpdateSerializer(serializers.ModelSerializer):
 class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
-        fields = (
-            'pk',
-            'location',
-            'description',
-            'date',
-            'due_date',
-        )
+        fields = SCHEDULE_FIELDS
 
 
 class ScheduleCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
-        fields = (
-            'study',
-            'location',
-            'description',
-            'date',
-            'due_date',
-        )
+        fields = SCHEDULE_FIELDS
 
     def to_representation(self, instance):
         return ScheduleSerializer(instance).data
 
 
+class ScheduleDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = SCHEDULE_FIELDS
+
+
 class ScheduleUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
-        fields = (
-            'location',
-            'description',
-            'date',
-            'due_date',
-        )
+        fields = SCHEDULE_FIELDS
 
     def to_representation(self, instance):
         return ScheduleSerializer(instance).data

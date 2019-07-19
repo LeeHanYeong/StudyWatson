@@ -20,6 +20,17 @@ class StudyCategory(models.Model):
         return self.name
 
 
+class StudyManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'category',
+            'author',
+        ).prefetch_related(
+            'schedule_set',
+            'membership_set',
+        )
+
+
 class Study(TimeStampedModel):
     category = models.ForeignKey(
         StudyCategory, verbose_name='카테고리',
@@ -36,6 +47,8 @@ class Study(TimeStampedModel):
         through='StudyMembership', related_name='joined_study_set',
     )
 
+    objects = StudyManager()
+
     class Meta:
         verbose_name = '스터디'
         verbose_name_plural = f'{verbose_name} 목록'
@@ -43,6 +56,14 @@ class Study(TimeStampedModel):
 
     def __str__(self):
         return f'{self.category.name} | {self.name} (pk: {self.pk})'
+
+
+class ScheduleManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'study',
+            'study__category',
+        )
 
 
 class Schedule(TimeStampedModel):
@@ -56,6 +77,8 @@ class Schedule(TimeStampedModel):
     vote_end_at = models.DateTimeField('투표 종료 일시', blank=True, null=True)
     start_at = models.DateTimeField('스터디 시작 일시', blank=True, null=True)
     studying_time = models.TimeField('스터디 시간', blank=True, null=True)
+
+    objects = ScheduleManager()
 
     class Meta:
         verbose_name = '스터디 일정'
@@ -74,10 +97,6 @@ class Schedule(TimeStampedModel):
                 user=memberhsip.user,
                 schedule=self,
             )
-
-    def save(self, **kwargs):
-        super().save(**kwargs)
-        self.study.membership_set.filter()
 
 
 class StudyMembership(TimeStampedModel):
@@ -111,6 +130,14 @@ class StudyMembership(TimeStampedModel):
         self.save()
 
 
+class AttendanceManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'user',
+            'schedule',
+        )
+
+
 class Attendance(TimeStampedModel):
     VOTE_ATTEND, VOTE_LATE, VOTE_ABSENT = ('attend', 'late', 'absent')
     CHOICES_VOTE = (
@@ -128,6 +155,8 @@ class Attendance(TimeStampedModel):
     )
     vote = models.CharField('사전 참석 투표', choices=CHOICES_VOTE, max_length=10, blank=True)
     att = models.CharField('실제 참석 결과', choices=CHOICES_VOTE, max_length=10, blank=True)
+
+    objects = AttendanceManager()
 
     class Meta:
         verbose_name = '스터디 일정 참가'
