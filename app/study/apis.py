@@ -18,7 +18,7 @@ from .serializers import (
     StudySerializer,
     StudyCreateSerializer,
     StudyUpdateSerializer,
-    StudyMemberSerializer,
+    StudyMembershipSerializer,
     StudyMemberCreateSerializer,
     StudyMemberUpdateSerializer,
     ScheduleSerializer,
@@ -28,7 +28,7 @@ from .serializers import (
     AttendanceCreateSerializer,
     AttendanceUpdateSerializer,
     StudyDetailSerializer,
-    StudyMemberDetailSerializer,
+    StudyMembershipDetailSerializer,
     AttendanceDetailSerializer,
 )
 
@@ -150,7 +150,7 @@ STUDY_MEMBER_LIST_DESCRIPTION = '''
         operation_summary='StudyMembership Create',
         operation_description='스터디멤버십 생성',
         responses={
-            status.HTTP_200_OK: StudyMemberDetailSerializer(),
+            status.HTTP_200_OK: StudyMembershipDetailSerializer(),
         }
     )
 )
@@ -161,7 +161,7 @@ class StudyMembershipListCreateAPIView(generics.ListCreateAPIView):
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return StudyMemberCreateSerializer
-        return StudyMemberSerializer
+        return StudyMembershipSerializer
 
     def perform_create(self, serializer):
         instance = serializer.save()
@@ -180,7 +180,7 @@ class StudyMembershipListCreateAPIView(generics.ListCreateAPIView):
         operation_summary='StudyMembership Update',
         operation_description='스터디멤버십 정보 수정',
         responses={
-            status.HTTP_200_OK: StudyMemberSerializer(),
+            status.HTTP_200_OK: StudyMembershipSerializer(),
         },
     ),
 )
@@ -197,7 +197,7 @@ class StudyMembershipRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroy
     def get_serializer_class(self):
         if self.request.method == 'PATCH':
             return StudyMemberUpdateSerializer
-        return StudyMemberDetailSerializer
+        return StudyMembershipDetailSerializer
 
     @swagger_auto_schema(auto_schema=None)
     def put(self, request, *args, **kwargs):

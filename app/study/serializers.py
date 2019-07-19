@@ -63,7 +63,7 @@ class StudyMemberCreateSerializer(serializers.ModelSerializer):
         )
 
     def to_representation(self, instance):
-        return StudyMemberDetailSerializer(instance).data
+        return StudyMembershipDetailSerializer(instance).data
 
 
 class StudyMemberUpdateSerializer(serializers.ModelSerializer):
@@ -74,7 +74,7 @@ class StudyMemberUpdateSerializer(serializers.ModelSerializer):
         )
 
     def to_representation(self, instance):
-        return StudyMemberSerializer(instance).data
+        return StudyMembershipSerializer(instance).data
 
 
 class ScheduleSerializer(serializers.ModelSerializer):
@@ -115,7 +115,7 @@ class StudySerializer(serializers.ModelSerializer):
         fields = STUDY_FIELDS
 
 
-class StudyMemberSerializer(serializers.ModelSerializer):
+class StudyMembershipSerializer(serializers.ModelSerializer):
     study = StudySerializer()
     user = UserSerializer()
     role_display = serializers.CharField(source='get_role_display')
@@ -125,14 +125,33 @@ class StudyMemberSerializer(serializers.ModelSerializer):
         fields = STUDY_MEMBER_FIELDS
 
 
-class StudyMemberDetailSerializer(StudyMemberSerializer):
+class AttendanceSimpleSerializer(serializers.ModelSerializer):
+    vote_display = serializers.CharField(source='get_vote_display')
+    att_display = serializers.CharField(source='get_att_display')
+
+    class Meta:
+        model = Attendance
+        fields = (
+            'pk',
+            'vote',
+            'vote_display',
+            'att',
+            'att_display',
+        )
+
+
+class StudyMembershipDetailSerializer(StudyMembershipSerializer):
+    attendance_set = AttendanceSimpleSerializer(read_only=True, many=True)
+
     class Meta:
         model = StudyMembership
-        fields = STUDY_MEMBER_FIELDS
+        fields = STUDY_MEMBER_FIELDS + (
+            'attendance_set',
+        )
 
 
 class StudyDetailSerializer(StudySerializer):
-    membership_set = StudyMemberSerializer(many=True)
+    membership_set = StudyMembershipSerializer(many=True)
     schedule_set = ScheduleSerializer(many=True)
 
     class Meta:

@@ -129,6 +129,10 @@ class StudyMembership(TimeStampedModel):
         self.is_withdraw = True
         self.save()
 
+    @property
+    def attendance_set(self):
+        return self.user.attendance_set.filter(schedule__study=self.study)
+
 
 class AttendanceManager(models.Manager):
     def get_queryset(self):
