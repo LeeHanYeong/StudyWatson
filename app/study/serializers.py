@@ -151,7 +151,7 @@ class StudyMembershipDetailSerializer(StudyMembershipSerializer):
 
 
 class StudyDetailSerializer(StudySerializer):
-    membership_set = StudyMembershipSerializer(many=True)
+    membership_set = StudyMembershipDetailSerializer(many=True)
     schedule_set = ScheduleSerializer(many=True)
 
     class Meta:
