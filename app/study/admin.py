@@ -37,7 +37,7 @@ class StudyMembershipAdmin(admin.ModelAdmin):
 
 @admin.register(Schedule)
 class ScheduleAdmin(admin.ModelAdmin):
-    list_display = ('study', 'location', 'date', 'due_date', 'pk')
+    list_display = ('study', 'location', 'vote_end_at', 'start_at', 'studying_time', 'pk')
     list_filter = ('study',)
 
 

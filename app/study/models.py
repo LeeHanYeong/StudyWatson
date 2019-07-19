@@ -53,8 +53,9 @@ class Schedule(TimeStampedModel):
     location = models.CharField('장소', max_length=50, blank=True)
     subject = models.CharField('주제', max_length=50, blank=True)
     description = models.CharField('설명', max_length=300, blank=True)
-    date = models.DateField('일정 당일')
-    due_date = models.DateField('마감일', blank=True, null=True)
+    vote_end_at = models.DateTimeField('투표 종료 일시', blank=True, null=True)
+    start_at = models.DateTimeField('스터디 시작 일시', blank=True, null=True)
+    studying_time = models.TimeField('스터디 시간', blank=True, null=True)
 
     class Meta:
         verbose_name = '스터디 일정'
@@ -62,7 +63,17 @@ class Schedule(TimeStampedModel):
         ordering = ('-pk',)
 
     def __str__(self):
-        return f'{self.study.category.name} | {self.study.name} | {self.date} (pk: {self.pk})'
+        return f'{self.study.category.name} | {self.study.name} | {self.start_at} (pk: {self.pk})'
+
+    def save(self, **kwargs):
+        super().save(**kwargs)
+        # Schedule생성 시, Schedule의 생성보다 먼저 Study에 참여한 User들의 출석정보를 일괄 저장
+        for memberhsip in self.study.membership_set.filter(
+                created__lte=self.created):
+            Attendance.objects.get_or_create(
+                user=memberhsip.user,
+                schedule=self,
+            )
 
     def save(self, **kwargs):
         super().save(**kwargs)

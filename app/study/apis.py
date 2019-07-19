@@ -154,7 +154,7 @@ STUDY_MEMBER_LIST_DESCRIPTION = '''
         }
     )
 )
-class StudyMemberListCreateAPIView(generics.ListCreateAPIView):
+class StudyMembershipListCreateAPIView(generics.ListCreateAPIView):
     queryset = StudyMembership.objects.all()
     filterset_class = StudyMembershipListFilter
 
@@ -162,6 +162,9 @@ class StudyMemberListCreateAPIView(generics.ListCreateAPIView):
         if self.request.method == 'POST':
             return StudyMemberCreateSerializer
         return StudyMemberSerializer
+
+    def perform_create(self, serializer):
+        instance = serializer.save()
 
 
 @method_decorator(
@@ -188,7 +191,7 @@ class StudyMemberListCreateAPIView(generics.ListCreateAPIView):
         operation_description='스터디멤버십 탈퇴',
     ),
 )
-class StudyMemberRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+class StudyMembershipRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = StudyMembership.objects.all()
 
     def get_serializer_class(self):
