@@ -2,7 +2,6 @@
 
 # Django
 django-debug-toolbar
-django-extensions
 
 # AWS
 awsebcli

@@ -9,7 +9,7 @@ django-phonenumber-field
 django-storages
 
 # DRF
-djangorestframework
+djangorestframework<3.10
 djangorestframework-camel-case
 django-cors-headers
 django-extra-fields
@@ -22,5 +22,6 @@ psycopg2-binary
 
 # Others
 boto3
+packaging
 pillow
 phonenumberslite
