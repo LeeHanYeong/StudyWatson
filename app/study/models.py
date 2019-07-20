@@ -76,7 +76,7 @@ class Schedule(TimeStampedModel):
     description = models.CharField('설명', max_length=300, blank=True)
     vote_end_at = models.DateTimeField('투표 종료 일시', blank=True, null=True)
     start_at = models.DateTimeField('스터디 시작 일시', blank=True, null=True)
-    studying_time = models.TimeField('스터디 시간', blank=True, null=True)
+    studying_time = models.DurationField('스터디 시간', blank=True, null=True)
 
     objects = ScheduleManager()
 
