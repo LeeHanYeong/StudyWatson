@@ -26,6 +26,7 @@ STUDY_MEMBER_FIELDS = (
 )
 SCHEDULE_FIELDS = (
     'pk',
+    'study',
     'location',
     'subject',
     'description',
@@ -92,7 +93,7 @@ class ScheduleCreateSerializer(serializers.ModelSerializer):
         return ScheduleSerializer(instance).data
 
 
-class ScheduleDetailSerializer(serializers.ModelSerializer):
+class ScheduleDetailSerializer(ScheduleSerializer):
     class Meta:
         fields = SCHEDULE_FIELDS
 
