@@ -17,19 +17,20 @@ from .serializers import (
     StudyCategorySerializer,
     StudySerializer,
     StudyCreateSerializer,
+    StudyDetailSerializer,
     StudyUpdateSerializer,
     StudyMembershipSerializer,
-    StudyMemberCreateSerializer,
-    StudyMemberUpdateSerializer,
+    StudyMembershipCreateSerializer,
+    StudyMembershipDetailSerializer,
+    StudyMembershipUpdateSerializer,
     ScheduleSerializer,
     ScheduleCreateSerializer,
+    ScheduleDetailSerializer,
     ScheduleUpdateSerializer,
     AttendanceSerializer,
     AttendanceCreateSerializer,
-    AttendanceUpdateSerializer,
-    StudyDetailSerializer,
-    StudyMembershipDetailSerializer,
     AttendanceDetailSerializer,
+    AttendanceUpdateSerializer,
 )
 
 
@@ -160,7 +161,7 @@ class StudyMembershipListCreateAPIView(generics.ListCreateAPIView):
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
-            return StudyMemberCreateSerializer
+            return StudyMembershipCreateSerializer
         return StudyMembershipSerializer
 
     def perform_create(self, serializer):
@@ -196,7 +197,7 @@ class StudyMembershipRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroy
 
     def get_serializer_class(self):
         if self.request.method == 'PATCH':
-            return StudyMemberUpdateSerializer
+            return StudyMembershipUpdateSerializer
         return StudyMembershipDetailSerializer
 
     @swagger_auto_schema(auto_schema=None)
@@ -264,7 +265,7 @@ class ScheduleRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView
     def get_serializer_class(self):
         if self.request.method == 'PATCH':
             return ScheduleUpdateSerializer
-        return ScheduleSerializer
+        return ScheduleDetailSerializer
 
     @swagger_auto_schema(auto_schema=None)
     def put(self, request, *args, **kwargs):

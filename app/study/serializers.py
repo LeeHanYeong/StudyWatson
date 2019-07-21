@@ -54,7 +54,7 @@ class StudyCategorySerializer(serializers.ModelSerializer):
         )
 
 
-class StudyMemberCreateSerializer(serializers.ModelSerializer):
+class StudyMembershipCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudyMembership
         fields = (
@@ -67,7 +67,7 @@ class StudyMemberCreateSerializer(serializers.ModelSerializer):
         return StudyMembershipDetailSerializer(instance).data
 
 
-class StudyMemberUpdateSerializer(serializers.ModelSerializer):
+class StudyMembershipUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudyMembership
         fields = (
@@ -76,6 +76,23 @@ class StudyMemberUpdateSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return StudyMembershipSerializer(instance).data
+
+
+class ScheduleAttendanceSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    vote_display = serializers.CharField(source='get_vote_display')
+    att_display = serializers.CharField(source='get_att_display')
+
+    class Meta:
+        model = Attendance
+        fields = (
+            'pk',
+            'user',
+            'vote',
+            'vote_display',
+            'att',
+            'att_display',
+        )
 
 
 class ScheduleSerializer(serializers.ModelSerializer):
@@ -94,8 +111,13 @@ class ScheduleCreateSerializer(serializers.ModelSerializer):
 
 
 class ScheduleDetailSerializer(ScheduleSerializer):
+    attendance_set = ScheduleAttendanceSerializer(read_only=True, many=True)
+
     class Meta:
-        fields = SCHEDULE_FIELDS
+        model = Schedule
+        fields = SCHEDULE_FIELDS + (
+            'attendance_set',
+        )
 
 
 class ScheduleUpdateSerializer(serializers.ModelSerializer):
@@ -116,6 +138,23 @@ class StudySerializer(serializers.ModelSerializer):
         fields = STUDY_FIELDS
 
 
+class StudyMembershipAttendanceSerializer(serializers.ModelSerializer):
+    vote_display = serializers.CharField(source='get_vote_display')
+    att_display = serializers.CharField(source='get_att_display')
+    schedule = ScheduleSerializer()
+
+    class Meta:
+        model = Attendance
+        fields = (
+            'pk',
+            'schedule',
+            'vote',
+            'vote_display',
+            'att',
+            'att_display',
+        )
+
+
 class StudyMembershipSerializer(serializers.ModelSerializer):
     study = StudySerializer()
     user = UserSerializer()
@@ -126,23 +165,8 @@ class StudyMembershipSerializer(serializers.ModelSerializer):
         fields = STUDY_MEMBER_FIELDS
 
 
-class AttendanceSimpleSerializer(serializers.ModelSerializer):
-    vote_display = serializers.CharField(source='get_vote_display')
-    att_display = serializers.CharField(source='get_att_display')
-
-    class Meta:
-        model = Attendance
-        fields = (
-            'pk',
-            'vote',
-            'vote_display',
-            'att',
-            'att_display',
-        )
-
-
 class StudyMembershipDetailSerializer(StudyMembershipSerializer):
-    attendance_set = AttendanceSimpleSerializer(read_only=True, many=True)
+    attendance_set = StudyMembershipAttendanceSerializer(read_only=True, many=True)
 
     class Meta:
         model = StudyMembership
@@ -153,7 +177,7 @@ class StudyMembershipDetailSerializer(StudyMembershipSerializer):
 
 class StudyDetailSerializer(StudySerializer):
     membership_set = StudyMembershipDetailSerializer(many=True)
-    schedule_set = ScheduleSerializer(many=True)
+    schedule_set = ScheduleDetailSerializer(many=True)
 
     class Meta:
         model = Study

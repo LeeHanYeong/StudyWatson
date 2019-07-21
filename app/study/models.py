@@ -27,6 +27,7 @@ class StudyManager(models.Manager):
             'author',
         ).prefetch_related(
             'schedule_set',
+            'schedule_set__attendance_set',
             'membership_set',
         )
 
