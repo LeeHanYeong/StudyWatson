@@ -122,6 +122,9 @@ class StudyMembership(TimeStampedModel):
         verbose_name = '스터디 멤버십'
         verbose_name_plural = f'{verbose_name} 목록'
         ordering = ('-pk',)
+        unique_together = (
+            ('user', 'study'),
+        )
 
     def __str__(self):
         return f'{self.study.name} | {self.user.name} ({self.get_role_display()} (pk: {self.pk})'
@@ -167,6 +170,9 @@ class Attendance(TimeStampedModel):
         verbose_name = '스터디 일정 참가'
         verbose_name_plural = f'{verbose_name} 목록'
         ordering = ('-pk',)
+        unique_together = (
+            ('user', 'schedule'),
+        )
 
     def __str__(self):
         return f'{self.schedule.__str__()} | {self.user.name} ' \
