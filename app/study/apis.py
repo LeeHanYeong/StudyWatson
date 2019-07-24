@@ -1,6 +1,8 @@
 from django.utils.decorators import method_decorator
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, status, permissions
+from rest_framework.generics import get_object_or_404
+from rest_framework.views import APIView
 
 from .filters import (
     ScheduleFilter,
@@ -12,6 +14,7 @@ from .models import (
     StudyMembership,
     Schedule,
     Attendance,
+    StudyInviteToken,
 )
 from .serializers import (
     StudyCategorySerializer,
@@ -31,7 +34,8 @@ from .serializers import (
     AttendanceCreateSerializer,
     AttendanceDetailSerializer,
     AttendanceUpdateSerializer,
-)
+    StudyInviteTokenCreateSerializer,
+    StudyMembershipCreateByInviteTokenSerializer)
 
 
 @method_decorator(
@@ -334,3 +338,30 @@ class AttendanceRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIVi
     @swagger_auto_schema(auto_schema=None)
     def put(self, request, *args, **kwargs):
         super().put(request, *args, **kwargs)
+
+
+@method_decorator(
+    name='post',
+    decorator=swagger_auto_schema(
+        operation_summary='StudyInviteToken Create',
+        operation_description='스터디 초대 토큰 생성(24시간 유효)'
+    )
+)
+class StudyInviteTokenCreateAPIView(generics.CreateAPIView):
+    queryset = StudyInviteToken.objects.all()
+    serializer_class = StudyInviteTokenCreateSerializer
+
+
+@method_decorator(
+    name='post',
+    decorator=swagger_auto_schema(
+        operation_summary='StudyMembership Create (By InviteToken)',
+        operation_description='초대 토큰값을 사용한 스터디 멤버십 생성'
+    )
+)
+class StudyMembershipCreateByInviteTokenAPIView(generics.CreateAPIView):
+    queryset = StudyMembership.objects.all()
+    serializer_class = StudyMembershipCreateByInviteTokenSerializer
+    permission_classes = (
+        permissions.IsAuthenticated,
+    )

@@ -12,4 +12,9 @@ urlpatterns = [
     path('schedules/<int:pk>/', apis.ScheduleRetrieveUpdateDestroyAPIView.as_view()),
     path('attendances/', apis.AttendanceListCreateAPIView.as_view()),
     path('attendances/<int:pk>/', apis.AttendanceRetrieveUpdateDestroyAPIView.as_view()),
+
+    # 초대토큰 생성
+    path('invite-token/', apis.StudyInviteTokenCreateAPIView.as_view()),
+    # 초대토큰을 사용한 멤버십 생성
+    path('memberships/token/', apis.StudyMembershipCreateByInviteTokenAPIView.as_view()),
 ]

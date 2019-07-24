@@ -180,13 +180,13 @@ class Attendance(TimeStampedModel):
             f'(pk: {self.pk})'
 
 
-class StudyInviteLink(TimeStampedModel):
+class StudyInviteToken(TimeStampedModel):
     study = models.ForeignKey(Study, verbose_name='스터디', on_delete=models.CASCADE)
-    code = models.CharField('초대코드', max_length=30, blank=True)
+    key = models.CharField('토큰값', max_length=30, blank=True, null=True, unique=True)
     duration = models.PositiveSmallIntegerField('유효시간', default=24)
 
     class Meta:
-        verbose_name = '스터디 초대 링크'
+        verbose_name = '스터디 초대 토큰'
         verbose_name_plural = f'{verbose_name} 목록'
         ordering = ('-created',)
         indexes = [
@@ -198,7 +198,7 @@ class StudyInviteLink(TimeStampedModel):
         return f'{self.study.name}'
 
     def save(self, **kwargs):
-        if not self.code:
+        if not self.key:
             self.reset_code(commit=False)
         super().save(**kwargs)
 
@@ -208,10 +208,10 @@ class StudyInviteLink(TimeStampedModel):
 
     def reset_code(self, commit=True):
         while True:
-            code = get_random_string(30)
-            if not StudyInviteLink.objects.filter(code=code).exists():
+            key = get_random_string(10)
+            if not StudyInviteToken.objects.filter(key=key).exists():
                 break
 
-        self.code = code
+        self.key = key
         if commit:
             self.save()

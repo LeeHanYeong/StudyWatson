@@ -30,3 +30,10 @@ EMAIL_VERIFICATION_NOT_EXISTS = Error(
     '이메일 인증정보가 없습니다',
     '이메일 인증정보가 없는 경우',
 )
+
+# StudyMembership
+MEMBERSHIP_ALREADY_EXISTS = Error(
+    'membershipAlreadyExists',
+    '스터디멤버십이 이미 존재합니다',
+    '스터디멤버십이 이미 존재할 경우',
+)
