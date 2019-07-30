@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models import Prefetch
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django_extensions.db.models import TimeStampedModel
@@ -28,7 +29,19 @@ class StudyManager(models.Manager):
         ).prefetch_related(
             'schedule_set',
             'schedule_set__attendance_set',
+            'schedule_set__attendance_set__user',
             'membership_set',
+            'membership_set__user',
+        )
+
+    def user_queryset(self, user):
+        attendances = Attendance.objects.filter(user=user)
+        return self.get_queryset().prefetch_related(
+            Prefetch(
+                'schedule_set__attendance_set',
+                queryset=attendances,
+                to_attr='self_attendance_list',
+            )
         )
 
 
@@ -66,6 +79,23 @@ class ScheduleManager(models.Manager):
             'study__category',
         )
 
+    def user_queryset(self, user):
+        """
+        request.user가 주어질 경우 필요한
+            self_attendance (인증된 유저의 출석(Attendance) pk)
+        를 annotate로 추가시켜주는 QuerySet
+        :param user:
+        :return:
+        """
+        self_attendances = Attendance.objects.filter(user=user)
+        return self.get_queryset().prefetch_related(
+            Prefetch(
+                'attendance_set',
+                queryset=self_attendances,
+                to_attr='self_attendance_list',
+            )
+        )
+
 
 class Schedule(TimeStampedModel):
     study = models.ForeignKey(
@@ -98,6 +128,15 @@ class Schedule(TimeStampedModel):
                 user=memberhsip.user,
                 schedule=self,
             )
+
+    @property
+    def self_attendance(self):
+        if hasattr(self, 'self_attendance_list'):
+            try:
+                return self.self_attendance_list[0]
+            except IndexError:
+                return None
+        return None
 
 
 class StudyMembership(TimeStampedModel):

@@ -10,6 +10,12 @@ INSTALLED_APPS += [
 MIDDLEWARE += [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
+# DRF
+REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] += (
+    'rest_framework.authentication.SessionAuthentication',
+)
+
 # django-debug-toolbar
 INTERNAL_IPS = [
     '127.0.0.1',

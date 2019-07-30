@@ -1,13 +1,12 @@
 from django.utils.decorators import method_decorator
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, status, permissions
-from rest_framework.generics import get_object_or_404
-from rest_framework.views import APIView
 
 from .filters import (
     ScheduleFilter,
     StudyMembershipListFilter,
-    AttendanceFilter)
+    AttendanceFilter,
+)
 from .models import (
     StudyCategory,
     Study,
@@ -35,7 +34,8 @@ from .serializers import (
     AttendanceDetailSerializer,
     AttendanceUpdateSerializer,
     StudyInviteTokenCreateSerializer,
-    StudyMembershipCreateByInviteTokenSerializer)
+    StudyMembershipCreateByInviteTokenSerializer,
+)
 
 
 @method_decorator(
@@ -78,10 +78,15 @@ class StudyCategoryListCreateAPIView(generics.ListCreateAPIView):
     )
 )
 class StudyListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Study.objects.all()
     permission_classes = (
         permissions.IsAuthenticated,
     )
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated:
+            return Study.objects.user_queryset(user)
+        return Study.objects.all()
 
     def perform_create(self, serializer):
         study = serializer.save(author=self.request.user)
@@ -125,7 +130,11 @@ class StudyListCreateAPIView(generics.ListCreateAPIView):
     ),
 )
 class StudyRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Study.objects.all()
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated:
+            return Study.objects.user_queryset(user)
+        return Study.objects.all()
 
     def get_serializer_class(self):
         if self.request.method == 'PATCH':
@@ -230,8 +239,13 @@ class StudyMembershipRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroy
     )
 )
 class ScheduleListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Schedule.objects.all()
     filterset_class = ScheduleFilter
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated:
+            return Schedule.objects.user_queryset(user)
+        return Schedule.objects.all()
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -264,7 +278,11 @@ class ScheduleListCreateAPIView(generics.ListCreateAPIView):
     ),
 )
 class ScheduleRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Schedule.objects.all()
+    def get_queryset(self):
+        user = self.request.user
+        if user:
+            return Schedule.objects.user_queryset(user)
+        return Schedule.objects.all()
 
     def get_serializer_class(self):
         if self.request.method == 'PATCH':

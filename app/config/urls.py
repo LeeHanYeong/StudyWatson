@@ -36,8 +36,16 @@ class SchemaGenerator(OpenAPISchemaGenerator):
         # '{'문자열을 더 우선순위로 둠
         # /seminars/{id}/가
         # /seminars/tracks/ 보다 우선순위가 되도록 설정
+        #  lambda의 key가 되는 list에서
+        #   '{'이 올 경우, 가장 앞에오도록 '0'으로 설정
         paths = OrderedDict(
-            sorted(paths.items(), key=lambda item: [char for char in item[0] if char != '{']))
+            sorted(
+                paths.items(),
+                key=lambda item: [
+                    char if char != '{' else '0'
+                    for char in item[0]]
+            )
+        )
         return super().get_paths_object(paths)
 
 
