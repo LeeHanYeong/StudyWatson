@@ -25,6 +25,7 @@ class StudyManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().select_related(
             'category',
+            'icon',
             'author',
         ).prefetch_related(
             'schedule_set',
@@ -47,12 +48,15 @@ class StudyManager(models.Manager):
 
 class StudyIcon(models.Model):
     name = models.CharField('이름', max_length=100)
-    img_icon = models.ImageField('아이콘 이미지', blank=True)
+    image = models.ImageField('아이콘 이미지', blank=True)
 
     class Meta:
         verbose_name = '스터디 아이콘'
         verbose_name_plural = f'{verbose_name} 목록'
         ordering = ('name',)
+
+    def __str__(self):
+        return self.name
 
 
 class Study(TimeStampedModel):

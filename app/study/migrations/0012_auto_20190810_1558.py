@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100, verbose_name='이름')),
-                ('img_icon', models.ImageField(blank=True, upload_to='', verbose_name='아이콘 이미지')),
+                ('image', models.ImageField(blank=True, upload_to='', verbose_name='아이콘 이미지')),
             ],
             options={
                 'verbose_name': '스터디 아이콘',

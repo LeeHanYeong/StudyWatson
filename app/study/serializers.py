@@ -7,6 +7,7 @@ from utils.drf import errors
 from utils.drf.exceptions import ValidationError
 from .models import (
     StudyCategory,
+    StudyIcon,
     Study,
     StudyMembership,
     Attendance,
@@ -17,6 +18,7 @@ from .models import (
 STUDY_FIELDS = (
     'pk',
     'category',
+    'icon',
     'author',
     'name',
     'description',
@@ -58,6 +60,16 @@ class StudyCategorySerializer(serializers.ModelSerializer):
         fields = (
             'pk',
             'name',
+        )
+
+
+class StudyIconSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudyIcon
+        fields = (
+            'pk',
+            'name',
+            'image',
         )
 
 
@@ -164,6 +176,7 @@ class ScheduleUpdateSerializer(serializers.ModelSerializer):
 
 class StudySerializer(serializers.ModelSerializer):
     category = StudyCategorySerializer()
+    icon = StudyIconSerializer()
     author = UserSerializer()
 
     class Meta:

@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from .models import (
     StudyCategory,
+    StudyIcon,
     Study,
     StudyMembership,
     Schedule,
@@ -17,6 +18,11 @@ class ScheduleInline(admin.TabularInline):
 @admin.register(StudyCategory)
 class StudyCategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'pk')
+
+
+@admin.register(StudyIcon)
+class StudyIconAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(Study)
