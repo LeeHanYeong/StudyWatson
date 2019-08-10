@@ -9,6 +9,7 @@ from .filters import (
 )
 from .models import (
     StudyCategory,
+    StudyIcon,
     Study,
     StudyMembership,
     Schedule,
@@ -17,6 +18,7 @@ from .models import (
 )
 from .serializers import (
     StudyCategorySerializer,
+    StudyIconSerializer,
     StudySerializer,
     StudyCreateSerializer,
     StudyDetailSerializer,
@@ -58,6 +60,18 @@ from .serializers import (
 class StudyCategoryListCreateAPIView(generics.ListCreateAPIView):
     queryset = StudyCategory.objects.all()
     serializer_class = StudyCategorySerializer
+
+
+@method_decorator(
+    name='get',
+    decorator=swagger_auto_schema(
+        operation_summary='StudyIcon List',
+        operation_description='스터디 아이콘 목록'
+    )
+)
+class StudyIconListAPIView(generics.ListAPIView):
+    queryset = StudyIcon.objects.all()
+    serializer_class = StudyIconSerializer
 
 
 @method_decorator(
