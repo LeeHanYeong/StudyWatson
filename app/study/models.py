@@ -45,10 +45,24 @@ class StudyManager(models.Manager):
         )
 
 
+class StudyIcon(models.Model):
+    name = models.CharField('이름', max_length=100)
+    img_icon = models.ImageField('아이콘 이미지', blank=True)
+
+    class Meta:
+        verbose_name = '스터디 아이콘'
+        verbose_name_plural = f'{verbose_name} 목록'
+        ordering = ('name',)
+
+
 class Study(TimeStampedModel):
     category = models.ForeignKey(
         StudyCategory, verbose_name='카테고리',
         related_name='study_set', on_delete=models.CASCADE,
+    )
+    icon = models.ForeignKey(
+        StudyIcon, verbose_name='아이콘', on_delete=models.SET_NULL,
+        related_name='study_set', blank=True, null=True,
     )
     author = models.ForeignKey(
         User, verbose_name='생성자', on_delete=models.CASCADE,
