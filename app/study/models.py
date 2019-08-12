@@ -48,7 +48,7 @@ class StudyManager(models.Manager):
 
 class StudyIcon(models.Model):
     name = models.CharField('이름', max_length=100)
-    image = models.ImageField('아이콘 이미지', blank=True)
+    image = models.ImageField('아이콘 이미지', upload_to='study/icons/', blank=True)
 
     class Meta:
         verbose_name = '스터디 아이콘'

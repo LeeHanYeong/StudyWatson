@@ -239,6 +239,7 @@ class StudyCreateSerializer(serializers.ModelSerializer):
         fields = (
             'pk',
             'category',
+            'icon',
             'name',
             'description',
         )
@@ -252,6 +253,7 @@ class StudyUpdateSerializer(serializers.ModelSerializer):
         model = Study
         fields = (
             'category',
+            'icon',
             'name',
             'description',
         )
