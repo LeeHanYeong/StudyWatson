@@ -1,3 +1,4 @@
+from django.db.models import Prefetch, Subquery, OuterRef
 from django.utils.decorators import method_decorator
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, status, permissions
@@ -93,7 +94,7 @@ class StudyIconListAPIView(generics.ListAPIView):
 )
 class StudyListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = (
-        permissions.IsAuthenticated,
+        permissions.IsAuthenticatedOrReadOnly,
     )
 
     def get_queryset(self):
@@ -183,8 +184,17 @@ STUDY_MEMBER_LIST_DESCRIPTION = '''
     )
 )
 class StudyMembershipListCreateAPIView(generics.ListCreateAPIView):
-    queryset = StudyMembership.objects.all()
     filterset_class = StudyMembershipListFilter
+
+    def get_queryset(self):
+        return StudyMembership.objects.select_related(
+            'user',
+            'study__category',
+            'study__author',
+        ).prefetch_related(
+            'study__member_set',
+            'study__schedule_set',
+        )
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
