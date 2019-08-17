@@ -56,16 +56,29 @@ class User(AbstractUser, TimeStampedModel, DeleteModel):
         super().save(*args, **kwargs)
 
     def perform_delete(self):
+        def get_deleted_username(num):
+            return f'deleted_{num:05d}'
+
         self.deleted_username = self.username
         self.deleted_email = self.email
+
+        # is_deleted = True로 저장하기 전에, deleted_숫자 의 username을 갖도록 함
         last_deleted_user = User._base_manager.filter(is_deleted=True).order_by('username').last()
         if last_deleted_user:
-            number = int(last_deleted_user.username.rsplit('_', 1)[-1])
+            number = int(last_deleted_user.username.rsplit('_', 1)[-1]) + 1
         else:
             number = 0
-        deleted_name = f'deleted_{number:05d}'
+        deleted_name = get_deleted_username(number)
         self.username = deleted_name
         self.email = None
+
+        # 만약 계산한 deleted_name이 이미 존재할 경우, 모든 삭제된 User들의 deleted_name을 다시 재설정
+        if User._base_manager.filter(username=deleted_name).exists():
+            index = 0
+            for user in User._base_manager.filter(is_deleted=True).order_by('pk'):
+                user.username = get_deleted_username(index)
+                index += 1
+            self.username = get_deleted_username(index)
 
 
 class EmailValidation(TimeStampedModel):
@@ -74,7 +87,7 @@ class EmailValidation(TimeStampedModel):
     email = models.EmailField('이메일')
     code = models.CharField('인증코드', max_length=50)
 
-    def save(self, *args, **kwargs):
+    def save(self, **kwargs):
         if not self.code:
             self.code = get_random_string(6, allowed_chars=string.digits)
-        super().save(*args, **kwargs)
+        super().save(**kwargs)
