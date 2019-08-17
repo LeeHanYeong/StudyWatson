@@ -4,6 +4,7 @@ from rest_framework.generics import get_object_or_404
 
 from utils.drf import errors
 from utils.drf.exceptions import ValidationError
+from .membership import StudyMembershipSerializer
 from ..models import (
     StudyInviteToken,
 )
