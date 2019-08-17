@@ -2,7 +2,10 @@ from django.db.models import Prefetch, Subquery, OuterRef
 from django.utils.decorators import method_decorator
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, status, permissions
+from rest_framework.generics import get_object_or_404
 
+from utils.drf import errors
+from utils.drf.exceptions import ValidationError
 from .filters import (
     ScheduleFilter,
     StudyMembershipListFilter,
@@ -159,6 +162,31 @@ class StudyRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     @swagger_auto_schema(auto_schema=None)
     def put(self, request, *args, **kwargs):
         super().put(request, *args, **kwargs)
+
+
+@method_decorator(
+    name='get',
+    decorator=swagger_auto_schema(
+        operation_id='study_read_by_token',
+        operation_summary='Study Retrieve (By InviteToken)',
+        operation_description='초대 토큰값을 사용한 스터디 정보'
+    )
+)
+class StudyRetrieveByInviteTokenAPIView(generics.RetrieveAPIView):
+    queryset = Study.objects.all()
+    serializer_class = StudyDetailSerializer
+    permission_classes = (
+        permissions.IsAuthenticated,
+    )
+
+    def get_object(self):
+        token_key = self.kwargs.get('token')
+        try:
+            token = StudyInviteToken.objects.get(key=token_key)
+        except StudyInviteToken.DoesNotExist:
+            raise ValidationError(errors.STUDY_INVITE_TOKEN_INVALID)
+        obj = get_object_or_404(self.queryset, token_set=token)
+        return obj
 
 
 STUDY_MEMBER_LIST_DESCRIPTION = '''

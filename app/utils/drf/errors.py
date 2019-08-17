@@ -31,6 +31,13 @@ EMAIL_VERIFICATION_NOT_EXISTS = Error(
     '이메일 인증정보가 없는 경우',
 )
 
+# Study
+STUDY_INVITE_TOKEN_INVALID = Error(
+    'studyInviteTokenInvalid',
+    '스터디 초대 토큰이 유효하지 않습니다',
+    '스터디 초대 토큰이 유효하지 않거나 존재하지 않는 경우',
+)
+
 # StudyMembership
 MEMBERSHIP_ALREADY_EXISTS = Error(
     'membershipAlreadyExists',

@@ -239,7 +239,8 @@ class Attendance(TimeStampedModel):
 
 
 class StudyInviteToken(TimeStampedModel):
-    study = models.ForeignKey(Study, verbose_name='스터디', on_delete=models.CASCADE)
+    study = models.ForeignKey(
+        Study, verbose_name='스터디', on_delete=models.CASCADE, related_name='token_set')
     key = models.CharField('토큰값', max_length=30, blank=True, null=True, unique=True)
     duration = models.PositiveSmallIntegerField('유효시간', default=24)
 

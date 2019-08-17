@@ -5,7 +5,8 @@ from ..models import (
     StudyCategory,
     StudyIcon,
     Study,
-    StudyMembership)
+    StudyMembership,
+)
 
 STUDY_FIELDS = (
     'pk',
@@ -94,11 +95,13 @@ class StudyUpdateSerializer(serializers.ModelSerializer):
 
 
 class _StudyDetailMembershipSerializer(serializers.ModelSerializer):
+    from .membership import StudyMembershipAttendanceSerializer
     """
     StudyDetailSerializer에서, membership_set을 표현하기 위한 Serializer
     """
     user = UserSerializer()
     role_display = serializers.CharField(source='get_role_display')
+    attendance_set = StudyMembershipAttendanceSerializer(read_only=True, many=True)
 
     class Meta:
         model = StudyMembership

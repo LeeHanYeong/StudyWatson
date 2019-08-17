@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 import os
+import re
 from collections import OrderedDict
 
 from django.contrib import admin
@@ -32,20 +33,17 @@ admin.site.site_header = 'StudyWatson 관리자 페이지'
 
 
 class SchemaGenerator(OpenAPISchemaGenerator):
+    PATTERN_ERASE_WORDS = re.compile('|'.join(
+        ['list', 'create', 'read', 'update', 'partial_update', 'destroy']))
+
     def get_paths_object(self, paths: OrderedDict):
-        # '{'문자열을 더 우선순위로 둠
-        # /seminars/{id}/가
-        # /seminars/tracks/ 보다 우선순위가 되도록 설정
-        #  lambda의 key가 되는 list에서
-        #   '{'이 올 경우, 가장 앞에오도록 '0'으로 설정
-        paths = OrderedDict(
-            sorted(
-                paths.items(),
-                key=lambda item: [
-                    char if char != '{' else '0'
-                    for char in item[0]]
-            )
-        )
+        # operation_id에서, PATTERN_ERASE_WORDS에 해당하는 단어를 지운 후 오름차순으로 정렬
+        def path_sort_function(path_tuple):
+            operation_id = path_tuple[1].operations[0][1]['operationId']
+            operation_id = self.PATTERN_ERASE_WORDS.sub('', operation_id)
+            return operation_id
+
+        paths = OrderedDict(sorted(paths.items(), key=path_sort_function))
         return super().get_paths_object(paths)
 
 
