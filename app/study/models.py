@@ -161,9 +161,9 @@ class Schedule(TimeStampedModel):
 class StudyMembership(TimeStampedModel):
     ROLE_NORMAL, ROLE_SUB_MANAGER, ROLE_MAIN_MANAGER = 'normal', 'sub_manager', 'manager'
     CHOICES_ROLE = (
-        (ROLE_NORMAL, '일반멤버'),
-        (ROLE_SUB_MANAGER, '부 관리자'),
-        (ROLE_MAIN_MANAGER, '관리자'),
+        (ROLE_NORMAL, '스터디 멤버'),
+        (ROLE_SUB_MANAGER, '스터디 서브 리더'),
+        (ROLE_MAIN_MANAGER, '스터디 리더'),
     )
     is_withdraw = models.BooleanField('탈퇴여부', default=False)
     user = models.ForeignKey(
