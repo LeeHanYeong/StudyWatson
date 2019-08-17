@@ -1,6 +1,7 @@
 # Django
 django
 django-admin-sortable2
+django-default-imagefield
 django-extensions
 django-filter
 django-json-secrets

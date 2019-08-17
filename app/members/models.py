@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.crypto import get_random_string
 from django_extensions.db.models import TimeStampedModel
+from django_fields import DefaultStaticImageField
 from phonenumber_field.modelfields import PhoneNumberField
 
 from utils.models import DeleteModel, DeleteModelManager
@@ -29,7 +30,8 @@ class User(AbstractUser, TimeStampedModel, DeleteModel):
     )
     first_name = None
     last_name = None
-    img_profile = models.ImageField('프로필 이미지', upload_to='user', blank=True)
+    img_profile = DefaultStaticImageField(
+        '프로필 이미지', upload_to='user', default_image_path='images/profile.jpg', blank=True)
     name = models.CharField('이름', max_length=20, blank=True)
     nickname = models.CharField('닉네임', max_length=20, blank=True, null=True)
     type = models.CharField('유형', max_length=10, choices=TYPE_CHOICES, default=TYPE_EMAIL)
