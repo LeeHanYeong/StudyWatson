@@ -30,7 +30,7 @@ class AttendanceSerializer(serializers.ModelSerializer):
 
 
 class AttendanceDetailSerializer(AttendanceSerializer):
-    study = StudySerializer(source='schedule__study')
+    study = StudySerializer(source='schedule.study')
     schedule = ScheduleSerializer()
 
     class Meta:
