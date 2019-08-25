@@ -2,6 +2,7 @@
 
 # Django
 django-debug-toolbar
+django-querycount
 
 # AWS
 awsebcli

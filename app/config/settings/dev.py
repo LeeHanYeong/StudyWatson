@@ -9,6 +9,7 @@ INSTALLED_APPS += [
 ]
 MIDDLEWARE += [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'querycount.middleware.QueryCountMiddleware',
 ]
 
 # DRF
@@ -20,3 +21,8 @@ REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] += (
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+# django-querycount
+QUERYCOUNT = {
+    'DISPLAY_DUPLICATES': 2,
+}

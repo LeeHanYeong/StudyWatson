@@ -219,7 +219,8 @@ class StudyMembershipListCreateAPIView(generics.ListCreateAPIView):
             'study__category',
             'study__author',
         ).prefetch_related(
-            'study__member_set',
+            'study__membership_set',
+            'study__membership_set__user',
             'study__schedule_set',
         )
 
