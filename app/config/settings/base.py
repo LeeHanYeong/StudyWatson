@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 from django.contrib import messages
-from djs import import_secrets
+from aws_secrets import SECRETS
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ROOT_DIR = os.path.dirname(BASE_DIR)
@@ -24,10 +24,26 @@ LOG_DIR = os.path.join(ROOT_DIR, '.log')
 TEMP_DIR = os.path.join(ROOT_DIR, '.temp')
 os.makedirs(LOG_DIR, exist_ok=True)
 os.makedirs(TEMP_DIR, exist_ok=True)
-import_secrets()
 
 ALLOWED_HOSTS = []
 SITE_ID = 1
+
+# django-aws-secrets-manager
+AWS_SECRETS_MANAGER_SECRETS_NAME = 'lhy'
+AWS_SECRETS_MANAGER_PROFILE = 'lhy-secrets-manager'
+AWS_SECRETS_MANAGER_SECRETS_SECTION = 'study-watson:base'
+AWS_SECRETS_MANAGER_REGION_NAME = 'ap-northeast-2'
+
+# Secrets
+SECRET_KEY = SECRETS['SECRET_KEY']
+AWS_S3_ACCESS_KEY_ID = SECRETS['AWS_S3_ACCESS_KEY_ID']
+AWS_S3_SECRET_ACCESS_KEY = SECRETS['AWS_S3_SECRET_ACCESS_KEY']
+AWS_DEFAULT_ACL = SECRETS['AWS_DEFAULT_ACL']
+AWS_BUCKET_ACL = SECRETS['AWS_BUCKET_ACL']
+AWS_AUTO_CREATE_BUCKET = SECRETS['AWS_AUTO_CREATE_BUCKET']
+AWS_S3_FILE_OVERWRITE = SECRETS['AWS_S3_FILE_OVERWRITE']
+AWS_STORAGE_BUCKET_NAME = SECRETS['AWS_STORAGE_BUCKET_NAME']
+DATABASES = SECRETS['DATABASES']
 
 # Static
 STATIC_URL = '/static/'

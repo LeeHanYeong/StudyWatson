@@ -1,8 +1,8 @@
 from .base import *
 
-import_secrets()
-
+AWS_SECRETS_MANAGER_SECRETS_SECTION = 'study-watson:dev'
 DEBUG = True
+ALLOWED_HOSTS += SECRETS['ALLOWED_HOSTS']
 
 INSTALLED_APPS += [
     'debug_toolbar',

@@ -6,14 +6,21 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 from .base import *
 
-secrets = import_secrets()
+AWS_SECRETS_MANAGER_SECRETS_SECTION = 'study-watson:production'
+DEBUG = False or (
+        len(sys.argv) > 1
+        and sys.argv[1] == 'runserver'
+        and platform.system() != 'Linux'
+) or os.environ.get('DEBUG') == 'True'
 
-# DEBUG = False or (
-#         len(sys.argv) > 1
-#         and sys.argv[1] == 'runserver'
-#         and platform.system() != 'Linux'
-# ) or os.environ.get('DEBUG') == 'True'
-DEBUG = True
+# Secrets
+ALLOWED_HOSTS += SECRETS['ALLOWED_HOSTS']
+
+# Sentry
+sentry_sdk.init(
+    dsn=SECRETS['SENTRY_DSN'],
+    integrations=[DjangoIntegration()]
+)
 
 # WSGI
 WSGI_APPLICATION = 'config.wsgi.production.application'
@@ -24,12 +31,6 @@ DEFAULT_FILE_STORAGE = 'config.storages.MediaStorage'
 
 # django-cors-headers
 CORS_ORIGIN_ALLOW_ALL = True
-
-# Sentry
-sentry_sdk.init(
-    dsn=secrets['SENTRY_DSN'],
-    integrations=[DjangoIntegration()]
-)
 
 
 def is_ec2_linux():
