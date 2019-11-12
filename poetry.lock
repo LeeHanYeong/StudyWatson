@@ -198,6 +198,19 @@ version = "3.1.1"
 Django = ">=1.11"
 
 [[package]]
+category = "main"
+description = "Management commands to help backup and restore a project database and media"
+name = "django-dbbackup"
+optional = false
+python-versions = "*"
+version = "3.1.3"
+
+[package.dependencies]
+Django = ">=1.5"
+pytz = "*"
+six = "*"
+
+[[package]]
 category = "dev"
 description = "A configurable set of panels that display various debug information about the current request/response."
 name = "django-debug-toolbar"
@@ -1065,7 +1078,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pathlib2", "contextlib2", "unittest2"]
 
 [metadata]
-content-hash = "87e0922f6d7daa279c36fad87be98739137d47b3f5f11551930cf1499efe1e5a"
+content-hash = "2dd24dc0a9f2b9c3a035775978bc7d82c16524f490f5dea1c5c04e1ba7079d89"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1139,6 +1152,9 @@ django-aws-secrets-manager = [
 django-cors-headers = [
     {file = "django-cors-headers-3.1.1.tar.gz", hash = "sha256:5762ec9c2d59f38c76828dc1d4308baca4bc0d3e1d6f217683e7a24a1c4611a3"},
     {file = "django_cors_headers-3.1.1-py3-none-any.whl", hash = "sha256:ee02f4b699e9b6645602a46d0adb430ee940a1bf8df64f77e516f8d7711fee60"},
+]
+django-dbbackup = [
+    {file = "django-dbbackup-3.1.3.tar.gz", hash = "sha256:b40935e12983c5f77d60d3721817746a14cf3ed6da098de1166e80a4c72b2a2a"},
 ]
 django-debug-toolbar = [
     {file = "django-debug-toolbar-2.0.tar.gz", hash = "sha256:17c53cd6bf4e7d69902aedf9a1d26c5d3b7369b54c5718744704f27b5a72f35d"},

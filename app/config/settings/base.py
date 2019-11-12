@@ -19,7 +19,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 ROOT_DIR = os.path.dirname(BASE_DIR)
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
-SECRETS_DIR = os.path.join(ROOT_DIR, '.secrets')
 LOG_DIR = os.path.join(ROOT_DIR, '.log')
 TEMP_DIR = os.path.join(ROOT_DIR, '.temp')
 os.makedirs(LOG_DIR, exist_ok=True)
@@ -44,6 +43,14 @@ AWS_AUTO_CREATE_BUCKET = SECRETS['AWS_AUTO_CREATE_BUCKET']
 AWS_S3_FILE_OVERWRITE = SECRETS['AWS_S3_FILE_OVERWRITE']
 AWS_STORAGE_BUCKET_NAME = SECRETS['AWS_STORAGE_BUCKET_NAME']
 DATABASES = SECRETS['DATABASES']
+
+# django-dbbackup
+DBBACKUP_STORAGE = 'config.storages.DBStorage'
+DBBACKUP_STORAGE_OPTIONS = {
+    'access_key': SECRETS['AWS_S3_ACCESS_KEY_ID'],
+    'secret_key': SECRETS['AWS_S3_SECRET_ACCESS_KEY'],
+    'bucket_name': SECRETS['AWS_STORAGE_BUCKET_NAME'],
+}
 
 # Static
 STATIC_URL = '/static/'
@@ -158,6 +165,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'adminsortable2',
+    'dbbackup',
     'django_extensions',
     'django_filters',
     'drf_yasg',
